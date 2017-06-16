@@ -1,4 +1,16 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+def projectVersion = "1.0.0"
+def projectGroupId = "com.github.madrapps"
+def siteUrl = 'https://github.com/Madrapps/AsyncQuery'
+def gitUrl = 'https://github.com/Madrapps/AsyncQuery.git'
+def fullName = "com.github.madrapps:asyncquery"
+
+version = projectVersion
+group = projectGroupId
+
 
 android {
     compileSdkVersion 25
@@ -28,4 +40,88 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+
+                groupId projectGroupId
+
+                name fullName
+                description = 'Improved AsyncQueryHandler that handles BulkInsert operation Edit'
+                url siteUrl
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'instrap'
+                        name 'Madrapps'
+                        email 'madrasappfactory@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+bintray {
+    user = System.getenv('bintray_user')
+    key = System.getenv('bintray_apikey')
+
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = fullName
+        userOrg = "madrapps"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+        version {
+            gpg {
+                sign = true
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://maven.google.com"
+    }
 }
