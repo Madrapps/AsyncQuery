@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">AsyncQueryHandler</string>
+    <string name="insert">Insert</string>
+    <string name="bullk_insert">Bulk Insert</string>
+</resources>
