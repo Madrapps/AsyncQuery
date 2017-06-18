@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.madrapps:asyncquery:1.0.0'
+  compile 'com.github.madrapps:asyncquery:1.0.1'
 }
 ```
 
